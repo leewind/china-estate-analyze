@@ -7,6 +7,7 @@
 
 from .items import SpidersKeList
 import urllib
+import pymongo
 
 class SpiderPipeline(object):
 
