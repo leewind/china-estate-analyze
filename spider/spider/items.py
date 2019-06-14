@@ -12,3 +12,4 @@ class SpidersKeList(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     content = scrapy.Field()
+    date = scrapy.Field()
