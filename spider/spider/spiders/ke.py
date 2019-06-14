@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import SpidersKeList from ..items
+from ..items import SpidersKeList
 
 
 class KeSpider(scrapy.Spider):
