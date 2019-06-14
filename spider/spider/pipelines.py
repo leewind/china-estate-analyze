@@ -6,6 +6,7 @@
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 from .items import SpidersKeList
+import urllib
 
 class SpiderPipeline(object):
 
