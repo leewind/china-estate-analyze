@@ -3,6 +3,7 @@ import pymongo
 import pymysql
 from mongodb_util import get_mongo_db_client
 from lxml import etree
+import re
 
 
 def main():
@@ -10,12 +11,14 @@ def main():
     db = client['ke']
 
     for r in db['kelist'].find().limit(1):
-        html = etree.HTML(r['content'], etree.HTMLParser())
+
+        # content = r['content'].replace(/<script[^>]*?>(?:.|\n)*?<\/script>/i, '')
+        content = re.sub(r'<script[^>]*?>(?:.|\n)*?<\/script>', '', r['content'])
+        content = re.sub(r'<!--.+-->', '', content)
+        html = etree.HTML(content)
 
         li_list = html.xpath('//ul[@class="sellListContent"]//li')
-        print(len(li_list))
         for li in li_list:
-
             print(etree.tostring(li, pretty_print=True))
             break
 
