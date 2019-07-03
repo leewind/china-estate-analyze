@@ -8,14 +8,14 @@ class KeSpider(scrapy.Spider):
     allowed_domains = ['ke.com']
     start_urls = ['http://ke.com/']
 
-    domain = 'https://sh.ke.com/ershoufang/zhabei/pg%dl2/'
+    domain = 'https://sh.ke.com/ershoufang/zhabei/pg%d/'
 
     def start_requests(self):
         # self.connect()
 
         current_date = datetime.datetime.now()
 
-        for i in range(1, 45):
+        for i in range(1, 96):
             yield scrapy.Request(
                 method='get',
                 url=self.domain % (i),
