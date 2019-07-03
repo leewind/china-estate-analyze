@@ -12,14 +12,35 @@ def main():
 
     for r in db['kelist'].find().limit(1):
 
-        # content = r['content'].replace(/<script[^>]*?>(?:.|\n)*?<\/script>/i, '')
         content = re.sub(r'<script[^>]*?>(?:.|\n)*?<\/script>', '', r['content'])
+        content = re.sub(r'<meta.+>', '', content)
+        content = re.sub(r'<link.+>', '', content)
         content = re.sub(r'<!--.+-->', '', content)
-        html = etree.HTML(content)
+        content = re.sub(r'\n', '', content)
+        content = re.sub(r'<br/>', '', content)
+        content = re.sub(r'<span class="houseIcon"></span>', '', content)
 
-        li_list = html.xpath('//ul[@class="sellListContent"]//li')
-        for li in li_list:
-            print(etree.tostring(li, pretty_print=True))
+        pattern = re.compile(r'<li class="clear">.*?</li>')   # 查找数字
+        result = pattern.findall(content)
+
+        for item in result:
+            # print(item)
+            html = etree.HTML(item)
+
+            print(html.xpath('//a[contains(@class,"maidian-detail")]/@href')[0])
+
+            print(html.xpath('//a[contains(@class,"maidian-detail")]/@title')[0])
+
+            # house info
+            print(html.xpath('//div[@class="houseInfo"]/text()')[0].replace(' ', ''))
+
+            # price
+            print(html.xpath('//div[@class="totalPrice"]/span/text()')[0])
+
+            # taxfree
+            print(html.xpath('//span[@class="taxfree"]/text()')[0])
+
+            print(r['date'])
             break
 
 
