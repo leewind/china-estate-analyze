@@ -13,3 +13,4 @@ class SpidersKeList(scrapy.Item):
     # name = scrapy.Field()
     content = scrapy.Field()
     date = scrapy.Field()
+    district = scrapy.Field()

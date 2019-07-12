@@ -29,7 +29,7 @@ class SpiderPipeline(object):
     def process_item(self, item, spider):
 
         if isinstance(item, SpidersKeList):
-            feedback = self.db["kelist"].insert_one({'content': item['content'], 'date': item['date']})
+            feedback = self.db["kelist"].insert_one({'content': item['content'], 'district': item['district'], 'date': item['date']})
 
         return item
 
