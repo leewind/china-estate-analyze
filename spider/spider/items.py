@@ -10,7 +10,8 @@ import scrapy
 
 class SpidersKeList(scrapy.Item):
     # define the fields for your item here like:
-    # name = scrapy.Field()
+    city = scrapy.Field()
     content = scrapy.Field()
     date = scrapy.Field()
     district = scrapy.Field()
+    hotpot= scrapy.Field()

@@ -11,22 +11,29 @@ class KeSpider(scrapy.Spider):
     allowed_domains = ['ke.com']
     start_urls = ['http://ke.com/']
 
-    district_name = 'zhabei'
-
-    domain = 'https://sh.ke.com/ershoufang/%s/pg%d/'
-    district = 'https://sh.ke.com/ershoufang/%s/'
-    main = 'https://sh.ke.com'
-
     def start_requests(self):
+
+        f = open('city_list.json', 'rb')
+        text = f.read()
+        o = json.loads(text)
+
         current_date = datetime.datetime.now()
-        yield scrapy.Request(
-            method='get',
-            url=self.district % ('zhabei'),
-            callback=self.parse_district,
-            meta={
-                'date': current_date.strftime("%Y-%m-%d")
-            }
-        )
+        for city in o['cities']:
+            for district in city['districts']:
+                for hotpot in district['hotpot']:
+
+                    yield scrapy.Request(
+                        method='get',
+                        url= city['city_host'] + hotpot['url'],
+                        callback=self.parse_len,
+                        meta={
+                            'city_name': city['city_name'],
+                            'district_name': district['district_name'],
+                            'hotpot_name': hotpot['hotpot'],
+                            'date': current_date.strftime("%Y-%m-%d"),
+                            'href': city['city_host'] + hotpot['url']
+                        }
+                    )
 
     def clean(slef, content):
         content = re.sub(r'<script[^>]*?>(?:.|\n)*?<\/script>', '', content)
@@ -38,25 +45,6 @@ class KeSpider(scrapy.Spider):
         content = re.sub(r'<span class="houseIcon"></span>', '', content)
         return content
 
-    def parse_district(self, response):
-        if response.text is not None:
-            content = self.clean(response.text)
-
-            html = etree.HTML(content)
-            divs = html.xpath('.//div[@data-role="ershoufang"]//div')
-            hrefs = divs[1].xpath('.//a/@href')
-
-            for href in hrefs:
-                yield scrapy.Request(
-                    method='get',
-                    url=self.main + href,
-                    callback=self.parse_len,
-                    meta={
-                        'date': response.meta['date'],
-                        'href': href
-                    }
-                )
-
     def parse_len(self, response):
         if response.text is not None:
             content = self.clean(response.text)
@@ -67,13 +55,23 @@ class KeSpider(scrapy.Spider):
                 for i in range(1, o['totalPage'] + 1):
                     yield scrapy.Request(
                         method='get',
-                        url=self.main + response.meta['href'] + 'pg'+ str(i) + '/',
+                        url=response.meta['href'] + 'pg'+ str(i) + '/',
                         callback=self.parse,
                         meta={
+                            'city_name': response.meta['city_name'],
+                            'district_name': response.meta['district_name'],
+                            'hotpot_name': response.meta['hotpot_name'],
+                            'href': response.meta['href'],
                             'date': response.meta['date']
                         }
                     )
 
     def parse(self, response):
         if response.text is not None:
-            yield SpidersKeList(content=response.text, district=self.district_name, date=response.meta['date'])
+            yield SpidersKeList(
+                content=response.text,
+                district=response.meta['district_name'],
+                hotpot = response.meta['hotpot_name'],
+                city = response.meta['city_name'],
+                date=response.meta['date']
+            )
