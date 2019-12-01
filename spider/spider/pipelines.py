@@ -19,7 +19,7 @@ class SpiderPipeline(object):
         username = urllib.parse.quote_plus(self.username_str)
         password = urllib.parse.quote_plus(self.password_str)
 
-        self.client = pymongo.MongoClient('mongodb://%s:%s@10.12.86.109:27017/' % (username, password))
+        self.client = pymongo.MongoClient('mongodb://%s:%s@192.168.31.87:27017/' % (username, password))
         self.db = self.client["ke"]
 
     def open_spider(self, spider):
@@ -29,7 +29,13 @@ class SpiderPipeline(object):
     def process_item(self, item, spider):
 
         if isinstance(item, SpidersKeList):
-            feedback = self.db["kelist"].insert_one({'content': item['content'], 'district': item['district'], 'date': item['date']})
+            feedback = self.db["kelist"].insert_one({
+                'content': item['content'], 
+                'district': item['district'], 
+                'city': item['city'], 
+                'hotpot': item['hotpot'], 
+                'date': item['date']
+            })
 
         return item
 
