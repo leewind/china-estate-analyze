@@ -6,6 +6,34 @@
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
+import random
+import json
+
+
+class ProxyMiddleware(object):
+    '''
+    设置Proxy
+    '''
+
+    def __init__(self, ip):
+        self.ip = ip
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        f = open("proxy.json", "r")
+        content = f.read()
+        o = json.loads(content)
+
+        arr = []
+        for i in o['proxy']:
+            arr.append('http://' + i['ip'] + ':' + i['port'])
+
+        # return cls(ip=crawler.settings.get('PROXIES'))
+        return cls(ip=arr)
+
+    def process_request(self, request, spider):
+        ip = random.choice(self.ip)
+        request.meta['proxy'] = ip
 
 
 class SpiderSpiderMiddleware(object):
