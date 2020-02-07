@@ -56,7 +56,7 @@ CONCURRENT_REQUESTS = 32
 #    'spider.middlewares.SpiderDownloaderMiddleware': 543,
 #}
 DOWNLOADER_MIDDLEWARES = {
-    'myproject.middlewares.ProxyMiddleware': 543,
+    'spider.middlewares.ProxyMiddleware': 543,
 }
 
 # Enable or disable extensions
