@@ -20,16 +20,15 @@ class ProxyMiddleware(object):
 
     @classmethod
     def from_crawler(cls, crawler):
-        f = open("proxy.json", "r")
-        content = f.read()
-        o = json.loads(content)
+        # f = open("proxy.json", "r")
+        # content = f.read()
+        # o = json.loads(content)
 
-        arr = []
-        for i in o['proxy']:
-            arr.append('http://' + i['ip'] + ':' + i['port'])
+        # arr = []
+        # for i in o['proxy']:
+        #     arr.append('http://' + i['ip'] + ':' + i['port'])
 
-        # return cls(ip=crawler.settings.get('PROXIES'))
-        return cls(ip=arr)
+        return cls(ip=crawler.settings.get('PROXIES'))
 
     def process_request(self, request, spider):
         ip = random.choice(self.ip)
