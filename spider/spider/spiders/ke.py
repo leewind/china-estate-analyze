@@ -6,10 +6,16 @@ import re
 from lxml import etree
 import json
 
+
 class KeSpider(scrapy.Spider):
     name = 'ke'
     allowed_domains = ['ke.com']
     start_urls = ['http://ke.com/']
+    city_name = None
+
+    def __init__(self, city_name=None, *args, **kwargs):
+        super(KeSpider, self).__init__(*args, **kwargs)
+        self.city_name = city_name
 
     def start_requests(self):
 
@@ -19,12 +25,16 @@ class KeSpider(scrapy.Spider):
 
         current_date = datetime.datetime.now()
         for city in o['cities']:
+            if self.city_name is not None and self.city_name != city['city_name']:
+                continue
+
+            print(city['city_name'])
             for district in city['districts']:
                 for hotpot in district['hotpot']:
 
                     yield scrapy.Request(
                         method='get',
-                        url= city['city_host'] + hotpot['url'],
+                        url=city['city_host'] + hotpot['url'],
                         callback=self.parse_len,
                         meta={
                             'city_name': city['city_name'],
@@ -49,13 +59,14 @@ class KeSpider(scrapy.Spider):
         if response.text is not None:
             content = self.clean(response.text)
             html = etree.HTML(content)
-            page_data = html.xpath('.//div[contains(@class, "house-lst-page-box")]/@page-data')
+            page_data = html.xpath(
+                './/div[contains(@class, "house-lst-page-box")]/@page-data')
             for data in page_data:
                 o = json.loads(data)
                 for i in range(1, o['totalPage'] + 1):
                     yield scrapy.Request(
                         method='get',
-                        url=response.meta['href'] + 'pg'+ str(i) + '/',
+                        url=response.meta['href'] + 'pg' + str(i) + '/',
                         callback=self.parse,
                         meta={
                             'city_name': response.meta['city_name'],
@@ -71,7 +82,7 @@ class KeSpider(scrapy.Spider):
             yield SpidersKeList(
                 content=response.text,
                 district=response.meta['district_name'],
-                hotpot = response.meta['hotpot_name'],
-                city = response.meta['city_name'],
+                hotpot=response.meta['hotpot_name'],
+                city=response.meta['city_name'],
                 date=response.meta['date']
             )
