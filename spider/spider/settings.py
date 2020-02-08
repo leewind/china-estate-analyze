@@ -22,7 +22,7 @@ NEWSPIDER_MODULE = 'spider.spiders'
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 128
+CONCURRENT_REQUESTS = 32
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
@@ -105,13 +105,13 @@ ITEM_PIPELINES = {
 
 # https://ip.ihuan.me/address/5LiK5rW3.html
 PROXIES = [
-    'http://101.231.104.82:80',
-    'http://49.235.253.240:8888',
+    # 'http://101.231.104.82:80',
+    # 'http://49.235.253.240:8888',
     'http://101.132.118.170:8080',
     'http://139.224.133.150:3128',
     'http://139.224.133.150:3128',
-    'http://118.25.183.14:8082',
-    'http://115.159.31.195:8080',
+    # 'http://118.25.183.14:8082',
+    # 'http://115.159.31.195:8080',
     'http://117.186.112.42:8001',
     'http://117.186.112.42:8001'
 ]
