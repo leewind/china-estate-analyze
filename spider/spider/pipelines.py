@@ -10,19 +10,25 @@ from lxml import etree
 import urllib
 import pymongo
 import re
+import pandas as pd
+import datetime
+
 
 class SpiderPipeline(object):
 
-    username_str = 'breadt'
-    password_str = 'Breadt@2019'
+    arr = []
+
+    # username_str = 'breadt'
+    # password_str = 'Breadt@2019'
 
     def connect(self):
+        pass
 
-        username = urllib.parse.quote_plus(self.username_str)
-        password = urllib.parse.quote_plus(self.password_str)
+    #     username = urllib.parse.quote_plus(self.username_str)
+    #     password = urllib.parse.quote_plus(self.password_str)
 
-        self.client = pymongo.MongoClient('mongodb://%s:%s@192.168.31.87:27017/' % (username, password))
-        self.db = self.client["ke"]
+    #     self.client = pymongo.MongoClient('mongodb://%s:%s@192.168.31.87:27017/' % (username, password))
+    #     self.db = self.client["ke"]
 
     def open_spider(self, spider):
         print('SpidersPipeline.open_spider')
@@ -33,6 +39,8 @@ class SpiderPipeline(object):
         data = []
         if isinstance(item, SpidersKeList):
             data = self.parse_content(item)
+
+            self.arr = self.arr + data
 
             # feedback = self.db["kelist"].insert_one({
             #     'content': item['content'],
@@ -52,7 +60,8 @@ class SpiderPipeline(object):
     def parse_one(self, item, info):
         html = etree.HTML(item)
 
-        house_info = html.xpath('//div[@class="houseInfo"]/text()')[0].replace(' ', '')
+        house_info = html.xpath(
+            '//div[@class="houseInfo"]/text()')[0].replace(' ', '')
         house_info_arr = house_info.split('|')
 
         if len(house_info_arr) == 5:
@@ -110,7 +119,8 @@ class SpiderPipeline(object):
         }
 
     def parse_content(self, info):
-        content = re.sub(r'<script[^>]*?>(?:.|\n)*?<\/script>', '', info['content'])
+        content = re.sub(
+            r'<script[^>]*?>(?:.|\n)*?<\/script>', '', info['content'])
         content = re.sub(r'<meta.+>', '', content)
         content = re.sub(r'<link.+>', '', content)
         content = re.sub(r'<!--.+-->', '', content)
@@ -124,11 +134,17 @@ class SpiderPipeline(object):
         data = []
         for item in result:
             one = self.parse_one(item, info)
-            feedback = self.db["kelist"].insert_one(one)
+            # feedback = self.db["kelist"].insert_one(one)
             data.append(one)
 
         return data
 
-
     def close_spider(self, spider):
-        self.client.close()
+        # self.client.close()
+
+        current_date = datetime.datetime.now()
+        df = pd.DataFrame(self.arr)
+
+        file_name = '/Users/leewind/Desktop/%s_%s.csv' % (
+            self.arr[0]['city_name'], current_date.strftime("%Y%m%d"))
+        df.to_csv(file_name, index=False)
