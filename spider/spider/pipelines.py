@@ -41,6 +41,7 @@ class SpiderPipeline(object):
             data = self.parse_content(item)
 
             self.arr = self.arr + data
+            print('爬取数据队列长度为%d' % (len(self.arr)))
 
             # feedback = self.db["kelist"].insert_one({
             #     'content': item['content'],
