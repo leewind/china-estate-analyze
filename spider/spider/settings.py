@@ -21,8 +21,11 @@ NEWSPIDER_MODULE = 'spider.spiders'
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
+# 缓存
+JOBDIR='ke.com'
+
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 8
+CONCURRENT_REQUESTS = 13
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
