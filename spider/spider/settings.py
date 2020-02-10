@@ -22,7 +22,7 @@ NEWSPIDER_MODULE = 'spider.spiders'
 ROBOTSTXT_OBEY = False
 
 # 缓存
-JOBDIR='ke.com'
+# JOBDIR='ke.com'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 CONCURRENT_REQUESTS = 36
