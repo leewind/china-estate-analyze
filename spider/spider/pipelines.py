@@ -91,11 +91,21 @@ class SpiderPipeline(object):
             level = house_info_arr[0]
 
         tax_info = html.xpath('//span[@class="taxfree"]/text()')
+
+        href = self.safe_get_info(html, '//a[contains(@class,"maidian-detail")]/@href')
+
+        id = 0
+        items = re.findall('\d+\.html', href)
+        if href is not None and len(items) > 0:
+            id = items[0].replace('.html', '')
+
         return {
+            'uid': info['date'] + '_' + str(id),
+            'id': id,
             'city': info['city'],
             'district': info['district'],
             'hotpot': info['hotpot'],
-            'href': self.safe_get_info(html, '//a[contains(@class,"maidian-detail")]/@href'),
+            'href': href,
             'title': self.safe_get_info(html, '//a[contains(@class,"maidian-detail")]/@title'),
             'info': house_info,
             'level': level,
