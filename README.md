@@ -11,9 +11,9 @@
 
 ## Spider
 
-1. 安装完所有依赖宝，需要修改数据库信息，数据库信息配置在`root/spider/spider/piplines.py`中
+1. 安装完所有依赖，需要修改数据库信息，数据库信息配置在`root/spider/spider/piplines.py`中
 
-   修改这里的`mongodb://%s:%s@192.168.31.87:27017/`修改`ip`信息和用户名密码
+   修改这里的`mongodb://%s:%s@192.168.31.87:27017/`修改`ip`信息和用户名密码，非常建议使用`docker`配置数据库
 
    ```python
    from .items import SpidersKeList
