@@ -7,7 +7,7 @@
 1. `scrapy`的命令行工具，关于`scrapy`的安装和使用参考[官方文档](https://scrapy.org/)
 2. `lxml`提供对`html`的解析能力
 3. `pymongo`提供`python`处理`mongodb`的能力，本系统处理数据会全部存储在`mongodb`的数据库中
-4. 本程序以来`mongodb`，在启动之前，需要提前配置`mongodb`数据库
+4. 本程序采用`mongodb`数据库，在启动之前，需要提前配置`mongodb`
 
 ## Spider
 
